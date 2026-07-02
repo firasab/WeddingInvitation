@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>فراس ووفاء — دعوة زفاف</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Scheherazade+New:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <canvas id="dustCanvas" class="dust-canvas" aria-hidden="true"></canvas>
+
+  <div id="youtubePlayer" class="youtube-player" aria-hidden="true"></div>
+
+  <button class="music-btn" id="musicBtn" aria-label="تشغيل الموسيقى">
+    <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  </button>
+
+  <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Cinematic Envelope -->
+  <div class="envelope-scene" id="envelopeScene">
+    <div class="scene-vignette"></div>
+    <div class="scene-ambient"></div>
+
+    <div class="envelope-stage" id="envelopeStage">
+      <div class="envelope-luminance envelope-luminance-top"></div>
+      <div class="envelope-luminance envelope-luminance-bottom"></div>
+
+      <div class="envelope-3d" id="envelope3d">
+        <div class="env-back"></div>
+
+        <div class="env-flap env-flap-bottom">
+          <div class="emboss-pattern"></div>
+        </div>
+
+        <div class="env-body">
+          <div class="paper-grain"></div>
+          <div class="env-inner-glow" id="envInnerGlow"></div>
+        </div>
+
+        <div class="env-flap env-flap-left">
+          <div class="emboss-pattern"></div>
+        </div>
+
+        <div class="env-flap env-flap-right">
+          <div class="emboss-pattern"></div>
+        </div>
+
+        <div class="env-flap env-flap-top">
+          <div class="emboss-pattern emboss-light"></div>
+        </div>
+
+        <div class="wax-seal" id="waxSeal" role="button" tabindex="0" aria-label="افتح الدعوة">
+          <div class="wax-surface">
+            <div class="wax-edge"></div>
+            <div class="wax-highlight"></div>
+            <span class="monogram">ف<span class="mono-amp">&</span>و</span>
+          </div>
+          <div class="wax-shadow"></div>
+        </div>
+      </div>
+
+      <p class="open-prompt">المس للفتح</p>
+    </div>
+
+    <div class="open-bloom" id="openBloom"></div>
+  </div>
+
+  <!-- Bride & Groom — fixed during intro, anchored inside hero after open -->
+  <div class="couple-walk" id="coupleWalk" aria-hidden="true">
+    <div class="cartoon-figure groom-figure" id="groomFigure">
+      <div class="figure-walk-cycle">
+        <img class="character-img" src="assets/groom.png" alt="" draggable="false">
+      </div>
+      <span class="figure-label">فراس</span>
+    </div>
+
+    <div class="cartoon-figure bride-figure" id="brideFigure">
+      <div class="figure-walk-cycle">
+        <img class="character-img" src="assets/bride.png" alt="" draggable="false">
+      </div>
+      <span class="figure-label">وفاء</span>
+    </div>
+  </div>
+
+  <main class="main-content" id="mainContent">
+
+    <section class="hero">
+      <div class="hero-frame">
+        <div class="hero-arch"></div>
+        <div class="hero-inner">
+          <p class="hero-eyebrow">دعوة زفاف</p>
+          <p class="hero-date">
+            <span class="date-weekday">الجمعة</span>
+            <span class="date-full">٢ أكتوبر ٢٠٢٦</span>
+          </p>
+          <div class="hero-rule"><span></span></div>
+
+          <div class="hero-couple">
+            <div class="couple-card groom-card">
+              <div class="couple-avatar groom-avatar" aria-hidden="true">
+                <div class="avatar-ring"></div>
+                <span class="couple-initial">ف</span>
+                <div class="avatar-sparkle"></div>
+              </div>
+              <span class="couple-role">العريس</span>
+              <h1 class="hero-name groom-name">فراس يونس أبوسنينة</h1>
+            </div>
+
+            <div class="couple-connector" aria-hidden="true">
+              <div class="connector-line"></div>
+              <div class="heart-cluster">
+                <span class="heart heart-main">♥</span>
+                <span class="heart heart-left">♥</span>
+                <span class="heart heart-right">♥</span>
+              </div>
+              <span class="hero-amp">و</span>
+              <div class="connector-line"></div>
+            </div>
+
+            <div class="couple-card bride-card">
+              <div class="couple-avatar bride-avatar" aria-hidden="true">
+                <div class="avatar-ring"></div>
+                <span class="couple-initial">و</span>
+                <div class="avatar-sparkle"></div>
+              </div>
+              <span class="couple-role">العروس</span>
+              <h1 class="hero-name bride-name">وفاء رياض شويكي</h1>
+            </div>
+          </div>
+          <p class="hero-scroll">مرّر للأسفل</p>
+          <div class="scroll-line"><span></span></div>
+        </div>
+        <div class="floral-accent floral-left" aria-hidden="true">
+          <svg viewBox="0 0 80 120" fill="none"><path d="M40 110 C35 80 38 55 40 30 C42 55 45 80 40 110" stroke="#d4a574" stroke-width="0.6" opacity="0.5"/><ellipse cx="32" cy="38" rx="10" ry="7" fill="#f4c4cc" opacity="0.35" transform="rotate(-20 32 38)"/><ellipse cx="48" cy="42" rx="8" ry="6" fill="#e8c9a8" opacity="0.25" transform="rotate(15 48 42)"/><ellipse cx="38" cy="28" rx="7" ry="5" fill="#d47284" opacity="0.3"/></svg>
+        </div>
+        <div class="floral-accent floral-right" aria-hidden="true">
+          <svg viewBox="0 0 80 120" fill="none"><path d="M40 110 C35 80 38 55 40 30 C42 55 45 80 40 110" stroke="#d4a574" stroke-width="0.6" opacity="0.5"/><ellipse cx="32" cy="38" rx="10" ry="7" fill="#f4c4cc" opacity="0.35" transform="rotate(-20 32 38)"/><ellipse cx="48" cy="42" rx="8" ry="6" fill="#e8c9a8" opacity="0.25" transform="rotate(15 48 42)"/><ellipse cx="38" cy="28" rx="7" ry="5" fill="#d47284" opacity="0.3"/></svg>
+        </div>
+        <div class="hero-shimmer" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="section quote-section reveal">
+      <div class="section-line"></div>
+      <blockquote class="quote-text">ومن آياته أن خلق لكم من أنفسكم أزواجاً لتسكنوا إليها وجعل بينكم مودة ورحمة</blockquote>
+      <cite class="quote-cite">سورة الروم — الآية ٢١</cite>
+    </section>
+
+    <section class="section intro-section reveal">
+      <p class="intro-text">يسعدنا دعوتكم لمشاركتنا أمسية من الحب والبركة والاحتفال، بينما نبدأ رحلتنا معاً.</p>
+    </section>
+
+    <section class="section countdown-section reveal">
+      <h2 class="section-title">يبدأ الاحتفال خلال</h2>
+      <div class="countdown">
+        <div class="countdown-unit">
+          <span class="countdown-val" id="days">٠٠</span>
+          <span class="countdown-lbl">أيام</span>
+        </div>
+        <span class="countdown-dot">·</span>
+        <div class="countdown-unit">
+          <span class="countdown-val" id="hours">٠٠</span>
+          <span class="countdown-lbl">ساعات</span>
+        </div>
+        <span class="countdown-dot">·</span>
+        <div class="countdown-unit">
+          <span class="countdown-val" id="minutes">٠٠</span>
+          <span class="countdown-lbl">دقائق</span>
+        </div>
+        <span class="countdown-dot">·</span>
+        <div class="countdown-unit">
+          <span class="countdown-val" id="seconds">٠٠</span>
+          <span class="countdown-lbl">ثوانٍ</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section events-section reveal">
+      <h2 class="section-title">التفاصيل</h2>
+      <div class="events-grid">
+        <article class="event-card">
+          <span class="event-label">التاريخ</span>
+          <p class="event-value">الجمعة · ٢ أكتوبر ٢٠٢٦</p>
+        </article>
+        <article class="event-card">
+          <span class="event-label">الوقت</span>
+          <p class="event-value">من الساعة السادسة حتى التاسعة مساءً</p>
+        </article>
+        <article class="event-card event-card-wide">
+          <span class="event-label">المكان</span>
+          <p class="event-value">قاعة قصر الأمراء — العيزرية</p>
+        </article>
+        <article class="event-card">
+          <span class="event-label">حفل الرجال</span>
+          <p class="event-value">الفنان أنس القيسي</p>
+        </article>
+        <article class="event-card">
+          <span class="event-label">مباركة النساء</span>
+          <p class="event-value">في نفس اليوم</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section notice-section reveal">
+      <div class="notice-panel">
+        <p class="notice-text">التصوير ممنوع منعاً باتاً في قاعة النساء.</p>
+      </div>
+    </section>
+
+    <section class="section map-section reveal">
+      <div class="venue-illustration" aria-hidden="true">
+        <svg viewBox="0 0 240 140" fill="none"><path d="M120 15 L220 58 L220 125 L20 125 L20 58 Z" stroke="#d4a574" stroke-width="0.8"/><path d="M120 15 L120 125" stroke="#d47284" stroke-width="0.5" opacity="0.5"/><path d="M95 15 L120 2 L145 15" stroke="#d4a574" stroke-width="0.7"/><path d="M55 58 L55 125 M85 58 L85 125 M155 58 L155 125 M185 58 L185 125" stroke="#c45c6e" stroke-width="0.4" opacity="0.6"/></svg>
+      </div>
+      <h2 class="section-title">الموقع</h2>
+      <p class="map-venue">قاعة قصر الأمراء — العيزرية</p>
+      <div class="map-wrap">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3382.5!2d35.26!3d31.78!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDQ2JzQ4LjAiTiAzNcKwMTUnMzYuMCJF!5e0!3m2!1sar!2s!4v1700000000000!5m2!1sar!2s" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="الموقع"></iframe>
+      </div>
+      <a href="https://maps.google.com/?q=قاعة+قصر+الأمراء+العيزرية" target="_blank" rel="noopener" class="map-btn">افتح في الخرائط</a>
+    </section>
+
+    <footer class="footer reveal">
+      <p class="footer-names">فراس <span>و</span> وفاء</p>
+      <p class="footer-date">٢ أكتوبر ٢٠٢٦</p>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
