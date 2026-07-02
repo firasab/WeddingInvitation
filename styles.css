@@ -1387,7 +1387,147 @@ body.opened .couple-walk:not(.anchored) {
   color: var(--gold);
 }
 
-/* ===== Responsive ===== */
+/* ===== Responsive — mobile first fixes ===== */
+@media (max-width: 767px) {
+  body {
+    font-size: 17px;
+    line-height: 1.85;
+  }
+
+  .music-btn {
+    bottom: max(18px, env(safe-area-inset-bottom, 18px));
+    left: max(18px, env(safe-area-inset-left, 18px));
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Envelope — fill more of the screen on phones */
+  .envelope-scene {
+    align-items: flex-start;
+    padding-top: max(10svh, env(safe-area-inset-top, 0px));
+  }
+
+  .envelope-stage {
+    width: min(340px, 92vw);
+    height: min(400px, 62svh);
+    margin-inline: auto;
+  }
+
+  .wax-seal {
+    width: 76px;
+    height: 76px;
+  }
+
+  .monogram { font-size: 22px; }
+
+  .open-prompt {
+    bottom: -44px;
+    font-size: 14px;
+  }
+
+  /* Characters — smaller during intro so they don't cover the envelope */
+  .groom-figure {
+    left: 0;
+    height: min(20vh, 150px);
+    bottom: max(8px, env(safe-area-inset-bottom, 8px));
+  }
+
+  .bride-figure {
+    right: 0;
+    height: min(22vh, 165px);
+    bottom: max(8px, env(safe-area-inset-bottom, 8px));
+  }
+
+  .couple-walk:not(.uniting):not(.united) .figure-label {
+    display: none;
+  }
+
+  .couple-walk.uniting .groom-figure,
+  .couple-walk.uniting .bride-figure {
+    height: min(24vh, 175px);
+  }
+
+  .couple-walk.anchored .groom-figure,
+  .couple-walk.anchored .bride-figure {
+    height: min(14vh, 115px);
+    bottom: max(6px, env(safe-area-inset-bottom, 6px));
+  }
+
+  /* Hero — room for characters + cleaner arch */
+  .hero {
+    min-height: 100dvh;
+    padding: max(48px, env(safe-area-inset-top, 48px)) 16px 150px;
+  }
+
+  .hero-frame {
+    max-width: 100%;
+    padding: 36px 18px 28px;
+  }
+
+  .hero-arch {
+    border-left: none;
+    border-right: none;
+    border-radius: 50% 50% 0 0 / 28% 28% 0 0;
+    opacity: 0.4;
+  }
+
+  .hero-eyebrow { font-size: 15px; margin-bottom: 10px; }
+
+  .hero-date { margin-bottom: 20px; }
+
+  .hero-date .date-full {
+    font-size: clamp(22px, 6.5vw, 28px);
+  }
+
+  .hero-rule { margin-bottom: 24px; }
+
+  .hero-couple { margin-bottom: 28px; }
+
+  .couple-avatar {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 8px;
+  }
+
+  .couple-initial { font-size: 26px; }
+
+  .hero-name {
+    font-size: clamp(21px, 6.2vw, 28px);
+    line-height: 1.55;
+  }
+
+  .couple-connector { padding: 10px 0; }
+
+  .hero-amp { font-size: 26px; }
+
+  .hero-scroll { margin-bottom: 8px; }
+
+  .floral-accent {
+    width: 40px;
+    bottom: 24px;
+    opacity: 0.35;
+  }
+
+  .section {
+    padding: 48px 20px;
+    max-width: 100%;
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-card-wide { grid-column: auto; }
+
+  .event-card { padding: 22px 16px; }
+
+  .event-value { font-size: 17px; }
+
+  .countdown-unit { min-width: 56px; padding: 0 4px; }
+
+  .footer { padding: 56px 20px max(80px, calc(60px + env(safe-area-inset-bottom, 0px))); }
+}
+
 @media (min-width: 768px) {
   .envelope-stage { width: 380px; height: 460px; }
   .section { padding: 80px 40px; }

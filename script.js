@@ -135,13 +135,18 @@
     return -(Math.cos(Math.PI * t) - 1) / 2;
   }
 
+  function isMobileLayout() {
+    return window.innerWidth < 768;
+  }
+
   function getHeroSpotPositions(anchoredMode) {
     const frame = document.querySelector('.hero-frame');
     const hero = heroSection;
-    const groomW = groomFigure.offsetWidth || 120;
-    const brideW = brideFigure.offsetWidth || 120;
-    const margin = 6;
-    const outsideGap = 4; // sit just outside the arch vertical borders
+    const mobile = isMobileLayout();
+    const groomW = groomFigure.offsetWidth || (mobile ? 80 : 120);
+    const brideW = brideFigure.offsetWidth || (mobile ? 80 : 120);
+    const margin = mobile ? 0 : 6;
+    const outsideGap = mobile ? 0 : 4;
     const useAnchored = anchoredMode ?? coupleWalk.classList.contains('anchored');
 
     if (!frame || !hero) {
@@ -150,7 +155,7 @@
       return {
         groomLeft: margin,
         brideLeft: vw - brideW - margin,
-        bottomPx: vh * 0.16,
+        bottomPx: mobile ? 12 : vh * 0.16,
       };
     }
 
@@ -164,14 +169,18 @@
           heroRect.width - brideW - margin,
           frameRect.right - heroRect.left + outsideGap
         ),
-        bottomPx: Math.max(32, heroRect.height - (frameRect.bottom - heroRect.top) + frameRect.height * 0.04),
+        bottomPx: mobile
+          ? Math.max(8, heroRect.height - (frameRect.bottom - heroRect.top) - 8)
+          : Math.max(32, heroRect.height - (frameRect.bottom - heroRect.top) + frameRect.height * 0.04),
       };
     }
 
     return {
       groomLeft: Math.max(margin, frameRect.left - groomW - outsideGap),
       brideLeft: Math.min(window.innerWidth - brideW - margin, frameRect.right + outsideGap),
-      bottomPx: Math.max(56, window.innerHeight - frameRect.bottom + frameRect.height * 0.05),
+      bottomPx: mobile
+        ? Math.max(12, window.innerHeight - frameRect.bottom - 8)
+        : Math.max(56, window.innerHeight - frameRect.bottom + frameRect.height * 0.05),
     };
   }
 
