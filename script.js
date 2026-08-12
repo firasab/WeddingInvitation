@@ -11,20 +11,30 @@
   const musicBtn = document.getElementById('musicBtn');
   const saveDateBtn = document.getElementById('saveDateBtn');
   const ytMusic = document.getElementById('ytMusic');
+  const bgMusic = document.getElementById('bgMusic');
 
-  // Stop early if this page is the wrong/outdated HTML
-  if (!cover || !openBtn || !app || !dock || !musicBtn || !ytMusic) {
-    console.error('Wedding invitation markup mismatch. Hard-refresh the page (Ctrl+F5).');
+  if (!cover || !openBtn || !app || !dock || !musicBtn) {
+    console.error('Wedding invitation markup mismatch. Hard-refresh the page.');
     return;
   }
 
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
   let musicPlaying = false;
+  let audioUnlocked = false;
   let autoScrolling = false;
   let autoScrollRaf = 0;
+  let opened = false;
 
   document.body.classList.add('is-locked');
+  if (bgMusic) {
+    bgMusic.volume = 0.7;
+    bgMusic.setAttribute('playsinline', '');
+    bgMusic.setAttribute('webkit-playsinline', '');
+  }
 
-  function musicSrc(autoplay) {
+  function musicSrc(autoplay, muted) {
     const params = new URLSearchParams({
       autoplay: autoplay ? '1' : '0',
       loop: '1',
@@ -35,7 +45,7 @@
       modestbranding: '1',
       rel: '0',
       playsinline: '1',
-      mute: '0',
+      mute: muted ? '1' : '0',
       enablejsapi: '1',
       origin: window.location.origin || 'https://firasab.github.io',
     });
@@ -47,35 +57,116 @@
     musicBtn.classList.toggle('playing', on);
   }
 
-  // Must run inside the same user tap so mobile browsers allow sound
-  function playMusic() {
-    ytMusic.src = musicSrc(true);
+  // iOS: unlock audio on first touch (required by Safari)
+  function unlockAudio() {
+    if (audioUnlocked || !bgMusic) return;
+    const p = bgMusic.play();
+    if (p && typeof p.then === 'function') {
+      p.then(() => {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        audioUnlocked = true;
+      }).catch(() => {});
+    } else {
+      try {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        audioUnlocked = true;
+      } catch (_) {}
+    }
+  }
+
+  cover.addEventListener('touchstart', unlockAudio, { passive: true });
+  cover.addEventListener('touchend', unlockAudio, { passive: true });
+  openBtn.addEventListener('touchstart', unlockAudio, { passive: true });
+
+  function playLocalAudio() {
+    if (!bgMusic) return Promise.reject();
+    bgMusic.muted = false;
+    bgMusic.volume = 0.7;
+    const p = bgMusic.play();
+    if (p && typeof p.then === 'function') {
+      return p.then(() => {
+        setMusicPlaying(true);
+        audioUnlocked = true;
+      });
+    }
+    setMusicPlaying(true);
+    return Promise.resolve();
+  }
+
+  function playYouTube() {
+    if (!ytMusic) return;
+    ytMusic.src = musicSrc(true, false);
+    // Ask the embed to play/unmute (helps some WebKit builds)
+    setTimeout(() => {
+      try {
+        ytMusic.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        ytMusic.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+        ytMusic.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[70]}', '*');
+      } catch (_) {}
+    }, 400);
     setMusicPlaying(true);
   }
 
+  // Must stay inside the user-gesture call stack for iPhone
+  function playMusic() {
+    if (isIOS) {
+      // iPhone Safari blocks YouTube autoplay — use local audio
+      playLocalAudio().catch(() => playYouTube());
+      return;
+    }
+    // Android / desktop: YouTube works reliably
+    playYouTube();
+  }
+
   function pauseMusic() {
-    ytMusic.src = '';
+    if (bgMusic) {
+      try { bgMusic.pause(); } catch (_) {}
+    }
+    if (ytMusic) ytMusic.src = '';
     setMusicPlaying(false);
   }
 
-  function openInvitation() {
+  function openInvitation(e) {
+    if (opened) return;
+    opened = true;
+    if (e) e.preventDefault();
+
+    // Unlock + play immediately in the same tap (critical for iPhone)
+    unlockAudio();
+    playMusic();
+
     cover.classList.add('is-gone');
     app.hidden = false;
     dock.hidden = false;
     document.body.classList.remove('is-locked');
-    playMusic();
+
     requestAnimationFrame(() => {
       setTimeout(startAutoScroll, 450);
     });
   }
 
+  // Use both click and touchend for iOS Safari
   openBtn.addEventListener('click', openInvitation);
+  openBtn.addEventListener('touchend', (e) => {
+    // Avoid double-firing with the following click
+    if (opened) return;
+    openInvitation(e);
+  }, { passive: false });
 
   musicBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (musicPlaying) pauseMusic();
     else playMusic();
   });
+
+  if (bgMusic) {
+    bgMusic.addEventListener('playing', () => setMusicPlaying(true));
+    bgMusic.addEventListener('pause', () => {
+      if (!ytMusic || !ytMusic.src) setMusicPlaying(false);
+    });
+  }
 
   // ===== Auto-scroll until user touches / scrolls =====
   function stopAutoScroll() {
@@ -109,7 +200,9 @@
   }
 
   ['wheel', 'touchstart', 'touchmove', 'pointerdown', 'mousedown', 'keydown'].forEach((evt) => {
-    window.addEventListener(evt, stopAutoScroll, { passive: true });
+    window.addEventListener(evt, () => {
+      if (opened) stopAutoScroll();
+    }, { passive: true });
   });
   dock.addEventListener('click', stopAutoScroll);
 

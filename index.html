@@ -17,9 +17,17 @@
       title="موسيقى"
       allow="autoplay; encrypted-media; clipboard-write"
       allowfullscreen
+      playsinline
+      webkit-playsinline
       referrerpolicy="strict-origin-when-cross-origin"
     ></iframe>
   </div>
+
+  <!-- Local audio: required for iPhone Safari (YouTube autoplay is blocked there) -->
+  <audio id="bgMusic" preload="auto" loop playsinline webkit-playsinline>
+    <source src="assets/music.m4a" type="audio/mp4">
+    <source src="assets/music.wav" type="audio/wav">
+  </audio>
 
   <!-- COVER -->
   <section class="cover" id="cover" aria-label="افتح الدعوة">
@@ -166,6 +174,6 @@
     </button>
   </nav>
 
-  <script src="script.js?v=20260812"></script>
+  <script src="script.js?v=20260813ios"></script>
 </body>
 </html>
