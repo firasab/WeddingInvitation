@@ -12,6 +12,12 @@
   const saveDateBtn = document.getElementById('saveDateBtn');
   const ytMusic = document.getElementById('ytMusic');
 
+  // Stop early if this page is the wrong/outdated HTML
+  if (!cover || !openBtn || !app || !dock || !musicBtn || !ytMusic) {
+    console.error('Wedding invitation markup mismatch. Hard-refresh the page (Ctrl+F5).');
+    return;
+  }
+
   let musicPlaying = false;
   let autoScrolling = false;
   let autoScrollRaf = 0;
@@ -57,7 +63,7 @@
     app.hidden = false;
     dock.hidden = false;
     document.body.classList.remove('is-locked');
-    playMusic(); // sync with OPEN tap
+    playMusic();
     requestAnimationFrame(() => {
       setTimeout(startAutoScroll, 450);
     });
@@ -117,27 +123,29 @@
   });
 
   // ===== Save date =====
-  saveDateBtn.addEventListener('click', () => {
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      'DTSTART:20261002T150000Z',
-      'DTEND:20261002T180000Z',
-      'SUMMARY:زفاف فراس ووفاء',
-      'LOCATION:قاعة القصر الملكي — العيزرية',
-      'DESCRIPTION:دعوة زفاف فراس يونس أبوسنينة ووفاء رياض شويكي',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'wedding-firas-wafaa.ics';
-    a.click();
-    URL.revokeObjectURL(url);
-  });
+  if (saveDateBtn) {
+    saveDateBtn.addEventListener('click', () => {
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'BEGIN:VEVENT',
+        'DTSTART:20261002T150000Z',
+        'DTEND:20261002T180000Z',
+        'SUMMARY:زفاف فراس ووفاء',
+        'LOCATION:قاعة القصر الملكي — العيزرية',
+        'DESCRIPTION:دعوة زفاف فراس يونس أبوسنينة ووفاء رياض شويكي',
+        'END:VEVENT',
+        'END:VCALENDAR',
+      ].join('\r\n');
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'wedding-firas-wafaa.ics';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
 
   // ===== Countdown =====
   function ar(n) {
@@ -160,8 +168,10 @@
       };
     }
     ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
       if (prev[id] !== vals[id]) {
-        document.getElementById(id).textContent = vals[id];
+        el.textContent = vals[id];
         prev[id] = vals[id];
       }
     });
