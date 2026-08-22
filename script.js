@@ -241,23 +241,19 @@
   }
 
   // ===== Countdown =====
-  function ar(n) {
-    return String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
-  }
-
   const prev = {};
   function tick() {
     const diff = WEDDING_DATE - Date.now();
     const ids = ['days', 'hours', 'minutes', 'seconds'];
     let vals;
     if (diff <= 0) {
-      vals = { days: '٠٠', hours: '٠٠', minutes: '٠٠', seconds: '٠٠' };
+      vals = { days: '00', hours: '00', minutes: '00', seconds: '00' };
     } else {
       vals = {
-        days: ar(String(Math.floor(diff / 86400000)).padStart(2, '0')),
-        hours: ar(String(Math.floor((diff / 3600000) % 24)).padStart(2, '0')),
-        minutes: ar(String(Math.floor((diff / 60000) % 60)).padStart(2, '0')),
-        seconds: ar(String(Math.floor((diff / 1000) % 60)).padStart(2, '0')),
+        days: String(Math.floor(diff / 86400000)).padStart(2, '0'),
+        hours: String(Math.floor((diff / 3600000) % 24)).padStart(2, '0'),
+        minutes: String(Math.floor((diff / 60000) % 60)).padStart(2, '0'),
+        seconds: String(Math.floor((diff / 1000) % 60)).padStart(2, '0'),
       };
     }
     ids.forEach((id) => {
